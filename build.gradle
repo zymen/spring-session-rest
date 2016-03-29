@@ -70,43 +70,43 @@ ext {
     ossrhPassword = project.ext.has('ossrhPassword') ? project.ext.ossrhPassword : ''
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            pom.project {
-                name 'Session Couchbase Spring Boot Starter'
-                packaging 'jar'
-                description 'Spring Boot starter for Couchbase backed HTTP session'
-                url 'https://github.com/mkopylec/session-couchbase-spring-boot-starter'
-                scm {
-                    connection 'scm:git:https://github.com/mkopylec/session-couchbase-spring-boot-starter.git'
-                    developerConnection 'scm:git:https://github.com/mkopylec/session-couchbase-spring-boot-starter.git'
-                    url 'https://github.com/mkopylec/session-couchbase-spring-boot-starter'
-                }
-                licenses {
-                    license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'mkopylec'
-                        name 'Mariusz Kopylec'
-                        email 'mariusz.kopylec@o2.pl'
-                    }
-                }
-            }
-        }
-    }
-}
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//            pom.project {
+//                name 'Session Couchbase Spring Boot Starter'
+//                packaging 'jar'
+//                description 'Spring Boot starter for Couchbase backed HTTP session'
+//                url 'https://github.com/mkopylec/session-couchbase-spring-boot-starter'
+//                scm {
+//                    connection 'scm:git:https://github.com/mkopylec/session-couchbase-spring-boot-starter.git'
+//                    developerConnection 'scm:git:https://github.com/mkopylec/session-couchbase-spring-boot-starter.git'
+//                    url 'https://github.com/mkopylec/session-couchbase-spring-boot-starter'
+//                }
+//                licenses {
+//                    license {
+//                        name 'The Apache License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                    }
+//                }
+//                developers {
+//                    developer {
+//                        id 'mkopylec'
+//                        name 'Mariusz Kopylec'
+//                        email 'mariusz.kopylec@o2.pl'
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 publishing {
     publications {
