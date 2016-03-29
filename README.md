@@ -1,5 +1,7 @@
 # spring-session-rest 
 
+[![Build Status](https://travis-ci.org/zymen/spring-session-rest.svg?branch=master)](https://travis-ci.org/zymen/spring-session-rest)
+
 To be done.
 
 ## Installing
