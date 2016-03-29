@@ -1,7 +1,7 @@
 package com.github.zymen.springsessionrest.persistent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.zymen.springsessionrest.SessionCouchbaseProperties;
+import com.github.zymen.springsessionrest.RestSessionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration("sessionPersistentConfiguration")
-@EnableConfigurationProperties(SessionCouchbaseProperties.class)
+@EnableConfigurationProperties(RestSessionProperties.class)
 @ConditionalOnProperty(name = "session-couchbase.in-memory.enabled", havingValue = "false", matchIfMissing = true)
 public class PersistentConfiguration {
 
     @Autowired
-    private SessionCouchbaseProperties sessionCouchbase;
+    private RestSessionProperties sessionCouchbase;
 
 //    @Bean
 //    @ConditionalOnMissingBean

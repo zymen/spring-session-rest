@@ -1,6 +1,6 @@
 package com.github.zymen.springsessionrest.inmemory;
 
-import com.github.zymen.springsessionrest.SessionCouchbaseProperties;
+import com.github.zymen.springsessionrest.RestSessionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -11,18 +11,18 @@ import org.springframework.session.MapSessionRepository;
 import org.springframework.session.SessionRepository;
 
 @Configuration("sessionInMemoryConfiguration")
-@EnableConfigurationProperties(SessionCouchbaseProperties.class)
-@ConditionalOnProperty(name = "session-couchbase.in-memory.enabled")
+@EnableConfigurationProperties(RestSessionProperties.class)
+@ConditionalOnProperty(name = "session-rest.in-memory.enabled")
 public class InMemoryConfiguration {
 
     @Autowired
-    private SessionCouchbaseProperties sessionCouchbase;
+    private RestSessionProperties restSessionProperties;
 
     @Bean
     @ConditionalOnMissingBean
     public SessionRepository sessionRepository() {
         MapSessionRepository repository = new MapSessionRepository();
-        repository.setDefaultMaxInactiveInterval(sessionCouchbase.getTimeoutInSeconds());
+        repository.setDefaultMaxInactiveInterval(restSessionProperties.getTimeoutInSeconds());
         return repository;
     }
 }

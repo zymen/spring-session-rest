@@ -12,28 +12,31 @@ import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
 
-public class CouchbaseSessionRepository implements FindByIndexNameSessionRepository<CouchbaseSession> {
+public class RestSessionRepository implements FindByIndexNameSessionRepository<RestSession> {
 
     protected static final String GLOBAL_NAMESPACE = "global";
     protected static final int SESSION_DOCUMENT_EXPIRATION_DELAY_IN_SECONDS = 60;
 
-    private static final Logger log = getLogger(CouchbaseSessionRepository.class);
+    private static final Logger log = getLogger(RestSessionRepository.class);
 
+    protected final RestDao dao;
     protected final ObjectMapper mapper;
     protected final String namespace;
     protected final int sessionTimeout;
     protected final Serializer serializer;
 
-    public CouchbaseSessionRepository(CouchbaseDao dao,
-                                      String namespace,
-                                      ObjectMapper mapper,
-                                      int sessionTimeout,
-                                      Serializer serializer) {
+    public RestSessionRepository(RestDao dao,
+                                 String namespace,
+                                 ObjectMapper mapper,
+                                 int sessionTimeout,
+                                 Serializer serializer) {
 
+        notNull(dao, "Rest Dao can not be null");
         notNull(mapper, "Missing JSON object mapper");
         hasText(namespace, "Empty HTTP session namespace");
         isTrue(!namespace.equals(GLOBAL_NAMESPACE), "Forbidden HTTP session namespace '" + namespace + "'");
         notNull(serializer, "Missing object serializer");
+        this.dao = dao;
         this.mapper = mapper;
         this.namespace = namespace.trim();
         this.sessionTimeout = sessionTimeout;
@@ -41,22 +44,21 @@ public class CouchbaseSessionRepository implements FindByIndexNameSessionReposit
     }
 
     @Override
-    public CouchbaseSession createSession() {
-        CouchbaseSession session = new CouchbaseSession(sessionTimeout);
+    public RestSession createSession() {
+        RestSession session = new RestSession();
         Map<String, Map<String, Object>> sessionData = new HashMap<>(2);
         sessionData.put(GLOBAL_NAMESPACE, session.getGlobalAttributes());
         sessionData.put(namespace, session.getNamespaceAttributes());
-        SessionDocument sessionDocument = new SessionDocument(session.getId(), sessionData);
-//        dao.save(sessionDocument);
-//        dao.updateExpirationTime(session.getId(), getSessionDocumentExpiration());
 
+        SessionDocument sessionDocument = new SessionDocument(session.getId(), sessionData);
+        dao.save(sessionDocument);
         log.debug("Created HTTP session with ID {}", session.getId());
 
         return session;
     }
 
     @Override
-    public void save(CouchbaseSession session) {
+    public void save(RestSession session) {
 //        Map<String, Object> serializedGlobal = serializer.serializeSessionAttributes(session.getGlobalAttributes());
 //        dao.updateSession(from(serializedGlobal), GLOBAL_NAMESPACE, session.getId());
 //
@@ -81,7 +83,7 @@ public class CouchbaseSessionRepository implements FindByIndexNameSessionReposit
     }
 
     @Override
-    public CouchbaseSession getSession(String id) {
+    public RestSession getSession(String id) {
 //        Map<String, Object> globalAttributes = dao.findSessionAttributes(id, GLOBAL_NAMESPACE);
 //        Map<String, Object> namespaceAttributes = dao.findSessionAttributes(id, namespace);
 //
@@ -110,7 +112,7 @@ public class CouchbaseSessionRepository implements FindByIndexNameSessionReposit
 
     @Override
     public void delete(String id) {
-        CouchbaseSession session = getSession(id);
+        RestSession session = getSession(id);
         if (session == null) {
             return;
         }
@@ -118,7 +120,7 @@ public class CouchbaseSessionRepository implements FindByIndexNameSessionReposit
     }
 
     @Override
-    public Map<String, CouchbaseSession> findByIndexNameAndIndexValue(String indexName, String indexValue) {
+    public Map<String, RestSession> findByIndexNameAndIndexValue(String indexName, String indexValue) {
 //        if (!PRINCIPAL_NAME_INDEX_NAME.equals(indexName)) {
 //            return emptyMap();
 //        }
@@ -143,7 +145,7 @@ public class CouchbaseSessionRepository implements FindByIndexNameSessionReposit
         return sessionTimeout + SESSION_DOCUMENT_EXPIRATION_DELAY_IN_SECONDS;
     }
 
-    protected void deleteSession(CouchbaseSession session) {
+    protected void deleteSession(RestSession session) {
 //        if (session.isPrincipalSession()) {
 //            dao.updateRemovePrincipalSession(session.getPrincipalAttribute(), session.getId());
 //            log.debug("Removed principals {} session with ID {}", session.getPrincipalAttribute(), session.getId());

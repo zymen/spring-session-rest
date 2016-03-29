@@ -6,11 +6,8 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-/**
- * Session couchbase configuration properties.
- */
-@ConfigurationProperties("session-couchbase")
-public class SessionCouchbaseProperties {
+@ConfigurationProperties("session-rest")
+public class RestSessionProperties {
 
     /**
      * HTTP session timeout.

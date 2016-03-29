@@ -1,7 +1,10 @@
 package com.github.zymen.springsessionrest
 
+import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.zymen.springsessionrest.utils.ApplicationInstance
 import com.github.zymen.springsessionrest.utils.ApplicationInstanceRunner
+import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -14,6 +17,8 @@ import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import static java.net.HttpCookie.parse
 import static org.springframework.http.HttpHeaders.COOKIE
 import static org.springframework.http.HttpMethod.DELETE
@@ -33,11 +38,17 @@ abstract class BasicSpec extends Specification {
     private ApplicationInstance instance
 
     @Autowired
-    private SessionCouchbaseProperties sessionCouchbase
+    private RestSessionProperties sessionRestProperties
     // Cannot store cookie in thread local because some tests starts more than one app instance. CANNOT run tests in parallel.
     private String currentSessionCookie
 
+    @Rule
+    public WireMockRule wireMock = new WireMockRule(10080)
+
     void setup() {
+        wireMock.stubFor(WireMock.post(urlEqualTo("/session")).willReturn(aResponse()
+                .withStatus(201)
+        ))
     }
 
     void cleanup() {
@@ -45,7 +56,7 @@ abstract class BasicSpec extends Specification {
         stopExtraApplicationInstance()
     }
 
-    protected void startExtraApplicationInstance(String namespace = sessionCouchbase.persistent.namespace) {
+    protected void startExtraApplicationInstance(String namespace = sessionRestProperties.persistent.namespace) {
         URL[] urls = [new File('/build/classes/test').toURI().toURL()]
         def classLoader = new URLClassLoader(urls, getClass().classLoader)
         def runnerClass = classLoader.loadClass(ApplicationInstanceRunner.class.name)
@@ -64,7 +75,7 @@ abstract class BasicSpec extends Specification {
     }
 
     protected int getSessionTimeout() {
-        return sessionCouchbase.timeoutInSeconds * 1000
+        return sessionRestProperties.timeoutInSeconds * 1000
     }
 
     protected void setSessionAttribute(Message attribute) {
