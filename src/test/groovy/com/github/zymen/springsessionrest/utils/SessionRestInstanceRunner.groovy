@@ -1,12 +1,13 @@
 package com.github.zymen.springsessionrest.utils
 
+import com.github.zymen.springsessionrest.restservice.SessionRestApplication
 import com.github.zymen.springsessionrest.testapp.TestApplication
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
 
 import static org.springframework.boot.SpringApplication.exit
 
-class ApplicationInstanceRunner {
+class SessionRestInstanceRunner {
 
     private final Object monitor = new Object()
     private EmbeddedWebApplicationContext context
@@ -46,7 +47,7 @@ class ApplicationInstanceRunner {
     private void runInstance() {
         def runnerThread = new InstanceRunningThread()
         shouldWait = true
-        runnerThread.contextClassLoader = TestApplication.classLoader
+        runnerThread.contextClassLoader = SessionRestApplication.classLoader
         runnerThread.start()
     }
 
@@ -54,7 +55,7 @@ class ApplicationInstanceRunner {
 
         @Override
         public void run() {
-            context = SpringApplication.run(TestApplication, '--server.port=0', "--session-couchbase.persistent.namespace=$namespace") as EmbeddedWebApplicationContext
+            context = SpringApplication.run(SessionRestApplication, '--server.port=10080') as EmbeddedWebApplicationContext
             port = context.embeddedServletContainer.port
             synchronized (monitor) {
                 shouldWait = false

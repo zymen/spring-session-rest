@@ -7,6 +7,8 @@ import org.springframework.session.FindByIndexNameSessionRepository;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.System.currentTimeMillis;
+import static java.util.Collections.singletonList;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.isTrue;
@@ -45,7 +47,7 @@ public class RestSessionRepository implements FindByIndexNameSessionRepository<R
 
     @Override
     public RestSession createSession() {
-        RestSession session = new RestSession();
+        RestSession session = new RestSession(sessionTimeout);
         Map<String, Map<String, Object>> sessionData = new HashMap<>(2);
         sessionData.put(GLOBAL_NAMESPACE, session.getGlobalAttributes());
         sessionData.put(namespace, session.getNamespaceAttributes());
@@ -59,55 +61,57 @@ public class RestSessionRepository implements FindByIndexNameSessionRepository<R
 
     @Override
     public void save(RestSession session) {
-//        Map<String, Object> serializedGlobal = serializer.serializeSessionAttributes(session.getGlobalAttributes());
-//        dao.updateSession(from(serializedGlobal), GLOBAL_NAMESPACE, session.getId());
-//
-//        if (session.isNamespacePersistenceRequired()) {
-//            Map<String, Object> serializedNamespace = serializer.serializeSessionAttributes(session.getNamespaceAttributes());
-//            dao.updateSession(from(serializedNamespace), namespace, session.getId());
-//        }
-//
-//        if (session.isPrincipalSession()) {
-//            String principal = session.getPrincipalAttribute();
-//            if (dao.exists(principal)) {
-//                dao.updateAppendPrincipalSession(principal, session.getId());
-//            } else {
-//                PrincipalSessionsDocument sessionsDocument = new PrincipalSessionsDocument(principal, singletonList(session.getId()));
-//                dao.save(sessionsDocument);
-//            }
-//            log.debug("Added principals {} session with ID {}", principal, session.getId());
-//            dao.updateExpirationTime(principal, getSessionDocumentExpiration());
-//        }
-//        dao.updateExpirationTime(session.getId(), getSessionDocumentExpiration());
-//        log.debug("Saved HTTP session with ID {}", session.getId());
+        log.info("Saving session " + session.getId());
+        Map<String, Object> serializedGlobal = serializer.serializeSessionAttributes(session.getGlobalAttributes());
+        dao.updateSession(serializedGlobal, GLOBAL_NAMESPACE, session.getId());
+
+        if (session.isNamespacePersistenceRequired()) {
+            Map<String, Object> serializedNamespace = serializer.serializeSessionAttributes(session.getNamespaceAttributes());
+            dao.updateSession(serializedNamespace, namespace, session.getId());
+        }
+
+        if (session.isPrincipalSession()) {
+            String principal = session.getPrincipalAttribute();
+            if (dao.exists(principal)) {
+                dao.updateAppendPrincipalSession(principal, session.getId());
+            } else {
+                PrincipalSessionsDocument sessionsDocument = new PrincipalSessionsDocument(principal, singletonList(session.getId()));
+                dao.save(sessionsDocument);
+            }
+            log.debug("Added principals {} session with ID {}", principal, session.getId());
+            dao.updateExpirationTime(principal, getSessionDocumentExpiration());
+        }
+
+        dao.updateExpirationTime(session.getId(), getSessionDocumentExpiration());
+        log.debug("Saved HTTP session with ID {}", session.getId());
     }
 
     @Override
     public RestSession getSession(String id) {
-//        Map<String, Object> globalAttributes = dao.findSessionAttributes(id, GLOBAL_NAMESPACE);
-//        Map<String, Object> namespaceAttributes = dao.findSessionAttributes(id, namespace);
-//
-//        if (globalAttributes == null && namespaceAttributes == null) {
-//            log.debug("HTTP session with ID {} not found", id);
-//            return null;
-//        }
-//
-//        notNull(globalAttributes, "Invalid state of HTTP session persisted in couchbase. Missing global attributes.");
-//
-//        Map<String, Object> deserializedGlobal = serializer.deserializeSessionAttributes(globalAttributes);
-//        Map<String, Object> deserializedNamespace = serializer.deserializeSessionAttributes(namespaceAttributes);
-//        CouchbaseSession session = new CouchbaseSession(id, deserializedGlobal, deserializedNamespace);
-//        if (session.isExpired()) {
-//            log.debug("HTTP session with ID {} has expired", id);
-//            deleteSession(session);
-//            return null;
-//        }
-//        session.setLastAccessedTime(currentTimeMillis());
-//
-//        log.debug("Found HTTP session with ID {}", id);
-//
-//        return session;
-        return null;
+        log.info("getSession " + id);
+        Map<String, Object> globalAttributes = dao.findSessionAttributes(id, GLOBAL_NAMESPACE);
+        Map<String, Object> namespaceAttributes = dao.findSessionAttributes(id, namespace);
+
+        if (globalAttributes == null && namespaceAttributes == null) {
+            log.debug("HTTP session with ID {} not found", id);
+            return null;
+        }
+
+        notNull(globalAttributes, "Invalid state of HTTP session persisted in couchbase. Missing global attributes.");
+
+        Map<String, Object> deserializedGlobal = serializer.deserializeSessionAttributes(globalAttributes);
+        Map<String, Object> deserializedNamespace = serializer.deserializeSessionAttributes(namespaceAttributes);
+        RestSession session = new RestSession(id, deserializedGlobal, deserializedNamespace);
+        if (session.isExpired()) {
+            log.debug("HTTP session with ID {} has expired", id);
+            deleteSession(session);
+            return null;
+        }
+        session.setLastAccessedTime(currentTimeMillis());
+
+        log.debug("Found HTTP session with ID {}", id);
+
+        return session;
     }
 
     @Override
@@ -121,6 +125,7 @@ public class RestSessionRepository implements FindByIndexNameSessionRepository<R
 
     @Override
     public Map<String, RestSession> findByIndexNameAndIndexValue(String indexName, String indexValue) {
+        log.info(indexName);
 //        if (!PRINCIPAL_NAME_INDEX_NAME.equals(indexName)) {
 //            return emptyMap();
 //        }

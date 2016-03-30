@@ -4,7 +4,5 @@ session-rest:
     namespace: test-application
     hosts: localhost
     password:
-  in-memory:
-    enabled: false
 
 logging.level.com.github.zymen.springsessionrest: trace

@@ -1,14 +1,15 @@
-package com.github.zymen.springsessionrest;
+package com.github.zymen.springsessionrest.restservice;
 
+import com.github.zymen.springsessionrest.EnableRestHttpSession;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static org.springframework.boot.SpringApplication.run;
 
 @EnableRestHttpSession
 @SpringBootApplication
-public class TestApplication {
+public class SessionRestApplication {
 
     public static void main(String[] args) {
-        run(TestApplication.class, args);
+        run(SessionRestApplication.class, args);
     }
 }

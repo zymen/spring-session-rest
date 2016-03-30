@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest;
+package com.github.zymen.springsessionrest.testapp;
 
 import com.github.zymen.springsessionrest.persistent.RestSession;
 import com.github.zymen.springsessionrest.persistent.RestSessionRepository;

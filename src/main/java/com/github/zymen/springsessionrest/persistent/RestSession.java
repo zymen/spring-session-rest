@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static java.lang.Math.round;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.UUID.randomUUID;
@@ -59,12 +58,12 @@ public class RestSession implements ExpiringSession, Serializable {
 
     @Override
     public long getCreationTime() {
-        return round((double) globalAttributes.get(CREATION_TIME_ATTRIBUTE));
+        return (long) globalAttributes.get(CREATION_TIME_ATTRIBUTE);
     }
 
     @Override
     public long getLastAccessedTime() {
-        return round((double) globalAttributes.get(LAST_ACCESSED_TIME_ATTRIBUTE));
+        return (long) globalAttributes.get(LAST_ACCESSED_TIME_ATTRIBUTE);
     }
 
     public void setLastAccessedTime(long lastAccessedTime) {

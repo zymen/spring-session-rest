@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest;
+package com.github.zymen.springsessionrest.testapp;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
