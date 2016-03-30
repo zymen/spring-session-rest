@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest;
+package com.github.zymen.springsessionrest.testapp;
 
 import java.io.Serializable;
 import java.util.Objects;

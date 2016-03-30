@@ -1,7 +1,10 @@
 package com.github.zymen.springsessionrest
 
+import com.github.zymen.springsessionrest.testapp.Message
+import com.github.zymen.springsessionrest.testapp.TestApplication
 import com.github.zymen.springsessionrest.utils.ApplicationInstance
 import com.github.zymen.springsessionrest.utils.ApplicationInstanceRunner
+import com.github.zymen.springsessionrest.utils.SessionRestInstanceRunner
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -31,21 +34,41 @@ abstract class BasicSpec extends Specification {
     private EmbeddedWebApplicationContext context
     private int extraInstancePort
     private ApplicationInstance instance
+    private ApplicationInstance sessionRestApplicationInstance
 
     @Autowired
-    private SessionCouchbaseProperties sessionCouchbase
+    private RestSessionProperties sessionRestProperties
     // Cannot store cookie in thread local because some tests starts more than one app instance. CANNOT run tests in parallel.
     private String currentSessionCookie
 
     void setup() {
+        startSessionRestInstance()
     }
 
     void cleanup() {
         clearSessionCookie()
         stopExtraApplicationInstance()
+        stopSessionRestInstance()
     }
 
-    protected void startExtraApplicationInstance(String namespace = sessionCouchbase.persistent.namespace) {
+    protected void startSessionRestInstance(String namespace = sessionRestProperties.persistent.namespace) {
+        URL[] urls = [new File('/build/classes/test').toURI().toURL()]
+        def classLoader = new URLClassLoader(urls, getClass().classLoader)
+        def runnerClass = classLoader.loadClass(SessionRestInstanceRunner.class.name)
+        def runnerInstance = runnerClass.newInstance()
+        sessionRestApplicationInstance = new ApplicationInstance(runnerClass, runnerInstance)
+//        runnerClass.getMethod('setNamespace', String).invoke(runnerInstance, namespace)
+        runnerClass.getMethod('run').invoke(runnerInstance)
+    }
+
+    protected void stopSessionRestInstance() {
+        if (sessionRestApplicationInstance) {
+            sessionRestApplicationInstance.runnerClass.getMethod('stop').invoke(sessionRestApplicationInstance.runnerInstance)
+            sessionRestApplicationInstance = null
+        }
+    }
+
+    protected void startExtraApplicationInstance(String namespace = sessionRestProperties.persistent.namespace) {
         URL[] urls = [new File('/build/classes/test').toURI().toURL()]
         def classLoader = new URLClassLoader(urls, getClass().classLoader)
         def runnerClass = classLoader.loadClass(ApplicationInstanceRunner.class.name)
@@ -64,7 +87,7 @@ abstract class BasicSpec extends Specification {
     }
 
     protected int getSessionTimeout() {
-        return sessionCouchbase.timeoutInSeconds * 1000
+        return sessionRestProperties.timeoutInSeconds * 1000
     }
 
     protected void setSessionAttribute(Message attribute) {
@@ -185,7 +208,14 @@ abstract class BasicSpec extends Specification {
     }
 
     private void saveSessionCookie(ResponseEntity response) {
-        def cookie = response.headers.get('Set-Cookie')
+        if (!response.headers.containsKey("Set-Cookie")) {
+            return
+        }
+
+        def cookie = response.headers
+                .getFirst("Set-Cookie")
+                .split(";")[0]
+
         if (cookie != null) {
             currentSessionCookie = cookie
         }

@@ -8,8 +8,8 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.github.zymen.springsessionrest.persistent.CouchbaseSession.globalAttributeName;
-import static com.github.zymen.springsessionrest.persistent.CouchbaseSessionRepository.GLOBAL_NAMESPACE;
+import static com.github.zymen.springsessionrest.persistent.RestSession.globalAttributeName;
+import static com.github.zymen.springsessionrest.persistent.RestSessionRepository.GLOBAL_NAMESPACE;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.Assert.notNull;
 
@@ -19,11 +19,11 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     private static final Logger log = getLogger(RequestWrapper.class);
 
-    protected final CouchbaseDao dao;
+    protected final RestDao dao;
     protected final String namespace;
     protected final Serializer serializer;
 
-    public RequestWrapper(HttpServletRequest request, CouchbaseDao dao, String namespace, Serializer serializer) {
+    public RequestWrapper(HttpServletRequest request, RestDao dao, String namespace, Serializer serializer) {
         super(request);
         this.dao = dao;
         this.namespace = namespace;

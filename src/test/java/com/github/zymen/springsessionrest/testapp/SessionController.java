@@ -1,7 +1,7 @@
-package com.github.zymen.springsessionrest;
+package com.github.zymen.springsessionrest.testapp;
 
-import com.github.zymen.springsessionrest.persistent.CouchbaseSession;
-import com.github.zymen.springsessionrest.persistent.CouchbaseSessionRepository;
+import com.github.zymen.springsessionrest.persistent.RestSession;
+import com.github.zymen.springsessionrest.persistent.RestSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Set;
 
-import static com.github.zymen.springsessionrest.persistent.CouchbaseSession.globalAttributeName;
+import static com.github.zymen.springsessionrest.persistent.RestSession.globalAttributeName;
 import static org.springframework.session.FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -27,8 +27,9 @@ public class SessionController {
 
     @Autowired(required = false)
     private SessionScopedBean sessionBean;
+
     @Autowired(required = false)
-    private CouchbaseSessionRepository sessionRepository;
+    private RestSessionRepository sessionRepository;
 
     @RequestMapping(value = "attribute", method = POST)
     public void setAttribute(@RequestBody Message dto, HttpSession session) {
@@ -92,7 +93,7 @@ public class SessionController {
 
     @RequestMapping("principal")
     public Set<String> getPrincipalSessions() {
-        Map<String, CouchbaseSession> sessionsById = sessionRepository.findByIndexNameAndIndexValue(PRINCIPAL_NAME_INDEX_NAME, PRINCIPAL_NAME);
+        Map<String, RestSession> sessionsById = sessionRepository.findByIndexNameAndIndexValue(PRINCIPAL_NAME_INDEX_NAME, PRINCIPAL_NAME);
         return sessionsById.keySet();
     }
 }

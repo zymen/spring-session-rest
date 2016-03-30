@@ -1,12 +1,11 @@
 package com.github.zymen.springsessionrest.specification
 
 import com.github.zymen.springsessionrest.BasicSpec
-import com.github.zymen.springsessionrest.Message
+import com.github.zymen.springsessionrest.testapp.Message
 import spock.lang.Ignore
 
 import static com.github.zymen.springsessionrest.assertions.Assertions.assertThat
 
-@Ignore
 class NamespacesSpec extends BasicSpec {
 
     def "Should set and get global HTTP session attribute using the same namespace"() {
@@ -51,6 +50,7 @@ class NamespacesSpec extends BasicSpec {
                 .hasBody(message)
     }
 
+    @Ignore
     def "Should not get HTTP session attribute using different namespace"() {
         given:
         def message = new Message(text: 'i robot 4', number: 4)
@@ -65,6 +65,7 @@ class NamespacesSpec extends BasicSpec {
                 .hasNoBody()
     }
 
+    @Ignore
     def "Should set and remove global HTTP session attribute using different namespace"() {
         given:
         def message = new Message(text: 'delete me', number: 71830)

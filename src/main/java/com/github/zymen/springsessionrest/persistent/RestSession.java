@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static java.lang.Math.round;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.UUID.randomUUID;
@@ -20,16 +19,16 @@ import static org.springframework.session.FindByIndexNameSessionRepository.PRINC
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.isTrue;
 
-public class CouchbaseSession implements ExpiringSession, Serializable {
+public class RestSession implements ExpiringSession, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public static final String CREATION_TIME_ATTRIBUTE = "$creationTime";
     public static final String LAST_ACCESSED_TIME_ATTRIBUTE = "$lastAccessedTime";
     public static final String MAX_INACTIVE_INTERVAL_ATTRIBUTE = "$maxInactiveInterval";
-    protected static final String GLOBAL_ATTRIBUTE_NAME_PREFIX = CouchbaseSession.class.getName() + ".global";
+    protected static final String GLOBAL_ATTRIBUTE_NAME_PREFIX = RestSession.class.getName() + ".global";
 
-    private static final Logger log = getLogger(CouchbaseSession.class);
+    private static final Logger log = getLogger(RestSession.class);
 
     protected String id = randomUUID().toString();
     protected Map<String, Object> globalAttributes = new HashMap<>();
@@ -37,14 +36,14 @@ public class CouchbaseSession implements ExpiringSession, Serializable {
     protected boolean namespacePersistenceRequired = false;
     protected boolean principalSession = false;
 
-    public CouchbaseSession(int timeoutInSeconds) {
+    public RestSession(int timeoutInSeconds) {
         long now = currentTimeMillis();
         setCreationTime(now);
         setLastAccessedTime(now);
         setMaxInactiveIntervalInSeconds(timeoutInSeconds);
     }
 
-    public CouchbaseSession(String id, Map<String, Object> globalAttributes, Map<String, Object> namespaceAttributes) {
+    public RestSession(String id, Map<String, Object> globalAttributes, Map<String, Object> namespaceAttributes) {
         this.id = id;
         this.globalAttributes = globalAttributes == null ? new HashMap<String, Object>() : globalAttributes;
         this.namespaceAttributes = namespaceAttributes == null ? new HashMap<String, Object>() : namespaceAttributes;
@@ -59,12 +58,12 @@ public class CouchbaseSession implements ExpiringSession, Serializable {
 
     @Override
     public long getCreationTime() {
-        return round((double) globalAttributes.get(CREATION_TIME_ATTRIBUTE));
+        return (long) globalAttributes.get(CREATION_TIME_ATTRIBUTE);
     }
 
     @Override
     public long getLastAccessedTime() {
-        return round((double) globalAttributes.get(LAST_ACCESSED_TIME_ATTRIBUTE));
+        return (long) globalAttributes.get(LAST_ACCESSED_TIME_ATTRIBUTE);
     }
 
     public void setLastAccessedTime(long lastAccessedTime) {

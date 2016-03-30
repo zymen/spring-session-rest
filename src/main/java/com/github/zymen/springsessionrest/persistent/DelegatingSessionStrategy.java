@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 public class DelegatingSessionStrategy implements MultiHttpSessionStrategy {
 
     protected final CookieHttpSessionStrategy sessionStrategy;
-    protected final CouchbaseDao dao;
+    protected final RestDao dao;
     protected final String namespace;
     protected final Serializer serializer;
 
-    public DelegatingSessionStrategy(CookieHttpSessionStrategy sessionStrategy, CouchbaseDao dao, String namespace, Serializer serializer) {
+    public DelegatingSessionStrategy(CookieHttpSessionStrategy sessionStrategy, RestDao dao, String namespace, Serializer serializer) {
         this.sessionStrategy = sessionStrategy;
         this.dao = dao;
         this.namespace = namespace;

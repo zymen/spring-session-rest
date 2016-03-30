@@ -1,7 +1,7 @@
 package com.github.zymen.springsessionrest.specification
 
 import com.github.zymen.springsessionrest.BasicSpec
-import com.github.zymen.springsessionrest.Message
+import com.github.zymen.springsessionrest.testapp.Message
 
 import static com.github.zymen.springsessionrest.assertions.Assertions.assertThat
 
