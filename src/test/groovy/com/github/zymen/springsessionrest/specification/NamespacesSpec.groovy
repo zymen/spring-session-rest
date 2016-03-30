@@ -22,7 +22,6 @@ class NamespacesSpec extends BasicSpec {
                 .hasBody(message)
     }
 
-    @Ignore
     def "Should set and get HTTP session attribute using the same namespace"() {
         given:
         def message = new Message(text: 'i robot 2', number: 2)
@@ -37,7 +36,6 @@ class NamespacesSpec extends BasicSpec {
                 .hasBody(message)
     }
 
-    @Ignore
     def "Should set and get global HTTP session attribute using different namespace"() {
         given:
         def message = new Message(text: 'i robot 3', number: 3)
