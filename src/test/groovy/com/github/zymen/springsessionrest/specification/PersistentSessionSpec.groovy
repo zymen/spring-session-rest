@@ -1,11 +1,9 @@
 package com.github.zymen.springsessionrest.specification
 
 import com.github.zymen.springsessionrest.testapp.Message
-import spock.lang.Ignore
 
 import static com.github.zymen.springsessionrest.assertions.Assertions.assertThat
 
-@Ignore
 class PersistentSessionSpec extends SessionSpec {
 
     def "Should copy HTTP session attributes when session ID was changed"() {

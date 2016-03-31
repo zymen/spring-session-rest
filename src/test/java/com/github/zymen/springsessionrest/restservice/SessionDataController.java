@@ -35,4 +35,10 @@ public class SessionDataController {
     public void saveSession(@RequestBody SessionDocument sessionDocument) {
         sessions.put(sessionDocument.getId(), sessionDocument);
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/{sessionId}", method = RequestMethod.DELETE)
+    public void deleteSession(@PathVariable("sessionId") String sessionId) {
+        sessions.remove(sessionId);
+    }
 }

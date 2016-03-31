@@ -151,11 +151,12 @@ public class RestSessionRepository implements FindByIndexNameSessionRepository<R
     }
 
     protected void deleteSession(RestSession session) {
-//        if (session.isPrincipalSession()) {
-//            dao.updateRemovePrincipalSession(session.getPrincipalAttribute(), session.getId());
-//            log.debug("Removed principals {} session with ID {}", session.getPrincipalAttribute(), session.getId());
-//        }
-//        dao.delete(session.getId());
-//        log.debug("Deleted HTTP session with ID {}", session.getId());
+        if (session.isPrincipalSession()) {
+            dao.updateRemovePrincipalSession(session.getPrincipalAttribute(), session.getId());
+            log.debug("Removed principals {} session with ID {}", session.getPrincipalAttribute(), session.getId());
+        }
+
+        dao.delete(session.getId());
+        log.debug("Deleted HTTP session with ID {}", session.getId());
     }
 }
