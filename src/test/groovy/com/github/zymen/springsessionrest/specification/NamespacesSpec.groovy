@@ -2,7 +2,6 @@ package com.github.zymen.springsessionrest.specification
 
 import com.github.zymen.springsessionrest.BasicSpec
 import com.github.zymen.springsessionrest.testapp.Message
-import spock.lang.Ignore
 
 import static com.github.zymen.springsessionrest.assertions.Assertions.assertThat
 

@@ -50,6 +50,12 @@ public class RestDao {
     }
 
     public void delete(String id) {
+        try {
+            URI requestUrl = new URI(sessionUrl + "/" + id);
+            restTemplate.delete(requestUrl);
+        } catch (URISyntaxException e) {
+            log.error("Problems with deleting session", e);
+        }
     }
 
     public void save(SessionDocument newDocument) {
@@ -71,6 +77,10 @@ public class RestDao {
 
     public Map<String, Object> findSessionAttributes(String sessionId, String namespace) {
         SessionDocument session = findById(sessionId);
+        if (session == null) {
+            return null;
+        }
+
         return session.getData().get(namespace);
     }
 }
