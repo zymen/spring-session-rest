@@ -1,7 +1,5 @@
 package com.github.zymen.springsessionrest;
 
-import com.github.zymen.springsessionrest.inmemory.InMemoryConfiguration;
-import com.github.zymen.springsessionrest.persistent.PersistentConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
@@ -16,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(TYPE)
 @Retention(RUNTIME)
 @EnableSpringHttpSession
-@Import({PersistentConfiguration.class, InMemoryConfiguration.class})
+@Import({PersistentConfiguration.class})
 public @interface EnableRestHttpSession {
 
 }

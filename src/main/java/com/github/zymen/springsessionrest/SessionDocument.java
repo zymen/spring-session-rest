@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

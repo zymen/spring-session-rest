@@ -1,7 +1,7 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.zymen.springsessionrest.RestSessionProperties;
+import com.github.zymen.springsessionrest.config.RestSessionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,17 +17,22 @@ public class PersistentConfiguration {
 
     @Autowired
     private RestSessionProperties restSessionProperties;
-//
+
     @Bean
     @ConditionalOnMissingBean
     public RestDao restDao() {
-        return new RestDao();
+        return new RestDao(restSessionProperties);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public MultiHttpSessionStrategy multiHttpSessionStrategy(RestDao dao, Serializer serializer) {
-        return new DelegatingSessionStrategy(new CookieHttpSessionStrategy(), dao, restSessionProperties.getPersistent().getNamespace(), serializer);
+        return new DelegatingSessionStrategy(
+                new CookieHttpSessionStrategy(),
+                dao,
+                restSessionProperties.getNamespace(),
+                serializer
+        );
     }
 
     @Bean
@@ -39,7 +44,13 @@ public class PersistentConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public SessionRepository sessionRepository(RestDao dao, ObjectMapper mapper, Serializer serializer) {
-        return new RestSessionRepository(dao, restSessionProperties.getPersistent().getNamespace(), mapper, restSessionProperties.getTimeoutInSeconds(), serializer);
+        return new RestSessionRepository(
+                dao,
+                restSessionProperties.getNamespace(),
+                mapper,
+                restSessionProperties.getTimeoutInSeconds(),
+                serializer
+        );
     }
 
     @Bean

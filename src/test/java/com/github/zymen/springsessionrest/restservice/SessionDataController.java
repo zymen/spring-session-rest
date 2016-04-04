@@ -1,6 +1,6 @@
 package com.github.zymen.springsessionrest.restservice;
 
-import com.github.zymen.springsessionrest.persistent.SessionDocument;
+import com.github.zymen.springsessionrest.SessionDocument;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

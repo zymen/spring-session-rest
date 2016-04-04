@@ -54,7 +54,7 @@ class ApplicationInstanceRunner {
 
         @Override
         public void run() {
-            context = SpringApplication.run(TestApplication, '--server.port=0', "--session-rest.persistent.namespace=$namespace") as EmbeddedWebApplicationContext
+            context = SpringApplication.run(TestApplication, '--server.port=0', "--session-rest.namespace=$namespace") as EmbeddedWebApplicationContext
             port = context.embeddedServletContainer.port
             synchronized (monitor) {
                 shouldWait = false

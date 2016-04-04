@@ -1,5 +1,6 @@
 package com.github.zymen.springsessionrest
 
+import com.github.zymen.springsessionrest.config.RestSessionProperties
 import com.github.zymen.springsessionrest.testapp.Message
 import com.github.zymen.springsessionrest.testapp.TestApplication
 import com.github.zymen.springsessionrest.utils.ApplicationInstance
@@ -51,13 +52,12 @@ abstract class BasicSpec extends Specification {
         stopSessionRestInstance()
     }
 
-    protected void startSessionRestInstance(String namespace = sessionRestProperties.persistent.namespace) {
+    protected void startSessionRestInstance() {
         URL[] urls = [new File('/build/classes/test').toURI().toURL()]
         def classLoader = new URLClassLoader(urls, getClass().classLoader)
         def runnerClass = classLoader.loadClass(SessionRestInstanceRunner.class.name)
         def runnerInstance = runnerClass.newInstance()
         sessionRestApplicationInstance = new ApplicationInstance(runnerClass, runnerInstance)
-//        runnerClass.getMethod('setNamespace', String).invoke(runnerInstance, namespace)
         runnerClass.getMethod('run').invoke(runnerInstance)
     }
 
@@ -68,7 +68,7 @@ abstract class BasicSpec extends Specification {
         }
     }
 
-    protected void startExtraApplicationInstance(String namespace = sessionRestProperties.persistent.namespace) {
+    protected void startExtraApplicationInstance(String namespace = sessionRestProperties.namespace) {
         URL[] urls = [new File('/build/classes/test').toURI().toURL()]
         def classLoader = new URLClassLoader(urls, getClass().classLoader)
         def runnerClass = classLoader.loadClass(ApplicationInstanceRunner.class.name)

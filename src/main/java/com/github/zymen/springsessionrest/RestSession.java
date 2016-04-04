@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest;
 
 import org.slf4j.Logger;
 import org.springframework.session.ExpiringSession;
