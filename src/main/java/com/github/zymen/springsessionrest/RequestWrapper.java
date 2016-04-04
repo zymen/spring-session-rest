@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest;
 
 import org.slf4j.Logger;
 
@@ -8,8 +8,6 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.github.zymen.springsessionrest.persistent.RestSession.globalAttributeName;
-import static com.github.zymen.springsessionrest.persistent.RestSessionRepository.GLOBAL_NAMESPACE;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.Assert.notNull;
 
@@ -51,11 +49,11 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     }
 
     protected void copyGlobalAttributes(SessionDocument oldDocument, HttpSession newSession) {
-        Map<String, Object> attributes = oldDocument.getData().get(GLOBAL_NAMESPACE);
+        Map<String, Object> attributes = oldDocument.getData().get(RestSessionRepository.GLOBAL_NAMESPACE);
         if (attributes != null) {
             Map<String, Object> deserializedAttributes = serializer.deserializeSessionAttributes(attributes);
             for (Entry<String, Object> attribute : deserializedAttributes.entrySet()) {
-                newSession.setAttribute(globalAttributeName(attribute.getKey()), attribute.getValue());
+                newSession.setAttribute(RestSession.globalAttributeName(attribute.getKey()), attribute.getValue());
             }
         }
     }

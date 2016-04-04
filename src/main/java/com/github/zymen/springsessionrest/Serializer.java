@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,11 +48,11 @@ public class Serializer {
         return deserialized;
     }
 
-    protected boolean isDeserializedObject(Object attributeValue) {
+    private boolean isDeserializedObject(Object attributeValue) {
         return attributeValue != null && !isPrimitiveOrWrapper(attributeValue.getClass()) && !(attributeValue instanceof String);
     }
 
-    protected boolean isSerializedObject(Object attributeValue) {
+    private boolean isSerializedObject(Object attributeValue) {
         return attributeValue != null && attributeValue instanceof String && startsWith(attributeValue.toString(), SERIALIZED_OBJECT_PREFIX);
     }
 }

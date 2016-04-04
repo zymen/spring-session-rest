@@ -1,7 +1,7 @@
 package com.github.zymen.springsessionrest.testapp;
 
-import com.github.zymen.springsessionrest.persistent.RestSession;
-import com.github.zymen.springsessionrest.persistent.RestSessionRepository;
+import com.github.zymen.springsessionrest.RestSession;
+import com.github.zymen.springsessionrest.RestSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Set;
 
-import static com.github.zymen.springsessionrest.persistent.RestSession.globalAttributeName;
+import static com.github.zymen.springsessionrest.RestSession.globalAttributeName;
 import static org.springframework.session.FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;

@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest;
 
 import org.springframework.session.Session;
 import org.springframework.session.web.http.CookieHttpSessionStrategy;

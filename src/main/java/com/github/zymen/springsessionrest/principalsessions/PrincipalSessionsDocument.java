@@ -1,4 +1,4 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest.principalsessions;
 
 import java.util.Collections;
 import java.util.List;

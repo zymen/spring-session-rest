@@ -1,6 +1,7 @@
-package com.github.zymen.springsessionrest.persistent;
+package com.github.zymen.springsessionrest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.zymen.springsessionrest.principalsessions.PrincipalSessionsDocument;
 import org.slf4j.Logger;
 import org.springframework.session.FindByIndexNameSessionRepository;
 
