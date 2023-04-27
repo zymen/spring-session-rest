@@ -15,6 +15,7 @@ updates:
       separator: "-"
     labels:
       - "dependencies"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for Gradle
   - package-ecosystem: "gradle"
@@ -28,3 +29,4 @@ updates:
       separator: "-"
     labels:
       - "dependencies"
+    open-pull-requests-limit: 10
