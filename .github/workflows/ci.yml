@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     name: CI
-    runs-on: [self-hosted, ubuntu-latest]
+    runs-on: [ubuntu-latest]
+#    runs-on: [self-hosted, ubuntu-latest]
     env:
       GRADLE_OPTS: '-Dfile.encoding=utf-8 -Dorg.gradle.daemon=false'
 
